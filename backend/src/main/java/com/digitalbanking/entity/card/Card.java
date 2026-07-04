@@ -32,6 +32,7 @@ public class Card extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private CardStatus status = CardStatus.ACTIVE;
 
     @Column(nullable = false, length = 100)
@@ -50,42 +51,54 @@ public class Card extends BaseEntity {
     private String pinHash;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal dailyLimit = new BigDecimal("100000");
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal monthlyLimit = new BigDecimal("1000000");
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal singleTransactionLimit = new BigDecimal("50000");
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean internationalEnabled = false;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean onlineEnabled = true;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean tapToPayEnabled = true;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean atmEnabled = true;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean posEnabled = true;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean contactlessEnabled = true;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isVirtual = false;
 
     private LocalDate issuedDate;
 
     private LocalDate blockedDate;
 
+    @Builder.Default
     private Integer failedPinAttempts = 0;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean pinSet = false;
 
     public enum CardType {

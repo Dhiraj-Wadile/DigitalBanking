@@ -36,6 +36,7 @@ public class Branch extends BaseEntity {
     private String email;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
 
     @Column(length = 10)

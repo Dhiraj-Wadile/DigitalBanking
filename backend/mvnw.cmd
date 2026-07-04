@@ -1,34 +1,29 @@
-@REM Maven Wrapper startup script for Windows
-@REM
-@REM Required ENV vars:
-@REM JAVA_HOME - location of a JDK home dir
-
 @echo off
-setlocal
-
+@setlocal
 set "MAVEN_PROJECTBASEDIR=%~dp0"
 
-set "WRAPPER_JAR=%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar"
-set "WRAPPER_PROPERTIES=%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.properties"
-
-if exist "%WRAPPER_JAR%" (
-    java %MAVEN_OPTS% -jar "%WRAPPER_JAR%" %*
+rem Check if mvn is available
+where mvn >nul 2>&1
+if %ERRORLEVEL% equ 0 (
+    mvn %*
     goto end
 )
 
-set "DOWNLOAD_URL=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip"
-set "MAVEN_HOME=%USERPROFILE%\.m2\wrapper\dists\apache-maven-3.9.9"
+set "WRAPPER_JAR=%MAVEN_PROJECTBASEDIR%.mvn\wrapper\maven-wrapper.jar"
+set "WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain"
 
-if not exist "%MAVEN_HOME%" (
-    echo Downloading Maven...
-    mkdir "%MAVEN_HOME%" 2>nul
-    powershell -Command "Invoke-WebRequest -Uri '%DOWNLOAD_URL%' -OutFile '%MAVEN_HOME%\maven.zip'"
-    powershell -Command "Expand-Archive -Path '%MAVEN_HOME%\maven.zip' -DestinationPath '%MAVEN_HOME%' -Force"
-    del "%MAVEN_HOME%\maven.zip"
-    for /d %%i in ("%MAVEN_HOME%\apache-maven-*") do set "MAVEN_HOME=%%i"
+if not exist "%WRAPPER_JAR%" (
+    echo Downloading Maven Wrapper...
+    set "WRAPPER_URL=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar"
+    powershell -Command "Invoke-WebRequest -Uri '%WRAPPER_URL%' -OutFile '%WRAPPER_JAR%'"
+    if %ERRORLEVEL% neq 0 (
+        echo Failed to download Maven Wrapper.
+        exit /b 1
+    )
 )
 
-"%MAVEN_HOME%\bin\mvn" %*
+set "MVN_DIR=%MAVEN_PROJECTBASEDIR:~0,-1%"
+java -classpath "%WRAPPER_JAR%" "-Dmaven.multiModuleProjectDirectory=%MVN_DIR%" "%WRAPPER_LAUNCHER%" %*
 
 :end
 endlocal

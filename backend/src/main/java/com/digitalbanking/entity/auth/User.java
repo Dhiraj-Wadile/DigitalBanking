@@ -35,7 +35,28 @@ public class User extends BaseEntity {
     private UserRole role;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean enabled = false;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean accountLocked = false;
+
+    @Builder.Default
+    private Integer failedLoginAttempts = 0;
+
+    private java.time.LocalDateTime lockedUntil;
+
+    private java.time.LocalDateTime lastLoginAt;
+
+    @Column(length = 500)
+    private String resetToken;
+
+    private java.time.LocalDateTime resetTokenExpiry;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean emailVerified = false;
 
     public enum UserRole {
         ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN, ROLE_SUPER_ADMIN

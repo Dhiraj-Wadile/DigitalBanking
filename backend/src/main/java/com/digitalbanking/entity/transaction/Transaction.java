@@ -30,6 +30,7 @@ public class Transaction extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private TransactionStatus status = TransactionStatus.PENDING;
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -69,6 +70,7 @@ public class Transaction extends BaseEntity {
     @Column(length = 50)
     private String idempotencyKey;
 
+    @Builder.Default
     private Integer retryCount = 0;
 
     public enum TransactionType {

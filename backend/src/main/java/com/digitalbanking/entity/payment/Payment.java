@@ -34,6 +34,7 @@ public class Payment extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -61,18 +62,22 @@ public class Payment extends BaseEntity {
     private String bankTransactionId;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean scheduled = false;
 
     private LocalDateTime scheduledDate;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean recurring = false;
 
     @Column(length = 30)
     private String recurringFrequency;
 
+    @Builder.Default
     private Integer retryCount = 0;
 
+    @Builder.Default
     private Integer maxRetries = 3;
 
     @Column(length = 200)
@@ -86,9 +91,11 @@ public class Payment extends BaseEntity {
     private LocalDateTime completionDate;
 
     @Column(precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal fee = BigDecimal.ZERO;
 
     @Column(precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal tax = BigDecimal.ZERO;
 
     public enum PaymentType {

@@ -28,12 +28,14 @@ public class Loan extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private LoanStatus status = LoanStatus.PENDING_APPROVAL;
 
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal sanctionedAmount;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal disbursedAmount = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -49,6 +51,7 @@ public class Loan extends BaseEntity {
     private BigDecimal emiAmount;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal processingFee = BigDecimal.ZERO;
 
     private LocalDate applicationDate;
@@ -61,11 +64,13 @@ public class Loan extends BaseEntity {
 
     private LocalDate closureDate;
 
+    @Builder.Default
     private Integer emisPaid = 0;
 
     private Integer emisRemaining;
 
     @Column(precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal totalInterestPaid = BigDecimal.ZERO;
 
     @Column(length = 500)

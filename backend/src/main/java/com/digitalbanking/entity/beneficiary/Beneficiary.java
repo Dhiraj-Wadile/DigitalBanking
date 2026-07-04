@@ -37,19 +37,24 @@ public class Beneficiary extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
+    @Builder.Default
     private BeneficiaryType type = BeneficiaryType.BANK_TRANSFER;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean verified = false;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
 
     @Column(length = 50)
     private String upiId;
 
+    @Builder.Default
     private Integer transferCount = 0;
 
+    @Builder.Default
     private Long totalTransferred = 0L;
 
     public enum BeneficiaryType {

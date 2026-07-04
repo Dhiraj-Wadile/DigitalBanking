@@ -54,10 +54,12 @@ public class Customer extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private KycStatus kycStatus = KycStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private CustomerStatus status = CustomerStatus.ACTIVE;
 
     @Column(length = 200)
@@ -72,6 +74,7 @@ public class Customer extends BaseEntity {
     private String profileImageUrl;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean nomineeAdded = false;
 
     public enum Gender {

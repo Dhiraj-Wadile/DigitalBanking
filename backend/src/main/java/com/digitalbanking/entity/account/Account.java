@@ -33,27 +33,35 @@ public class Account extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private AccountStatus status = AccountStatus.ACTIVE;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal availableBalance = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal holdAmount = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 5, scale = 2)
+    @Builder.Default
     private BigDecimal interestRate = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal dailyTransactionLimit = new BigDecimal("500000");
 
     @Column(nullable = false, precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal singleTransactionLimit = new BigDecimal("100000");
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean dormant = false;
 
     private LocalDate lastTransactionDate;
@@ -69,9 +77,11 @@ public class Account extends BaseEntity {
     private LocalDate closedDate;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean overdraftEnabled = false;
 
     @Column(precision = 18, scale = 2)
+    @Builder.Default
     private BigDecimal overdraftLimit = BigDecimal.ZERO;
 
     public enum AccountType {

@@ -51,6 +51,7 @@ public class AuditLog {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
+    @Builder.Default
     private AuditActionStatus status = AuditActionStatus.SUCCESS;
 
     @Column(length = 2000)
