@@ -4,13 +4,14 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY .mvn .mvn
-COPY mvnw .
+COPY mvnw mvnw
+COPY mvnw.cmd mvnw.cmd
 
-RUN ./mvnw dependency:go-offline
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 
 COPY src src
 
-RUN ./mvnw package -DskipTests
+RUN ./mvnw package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-alpine
 
