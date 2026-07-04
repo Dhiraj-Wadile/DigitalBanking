@@ -8,7 +8,6 @@ import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.CardMapper;
 import com.digitalbanking.repository.CardRepository;
 import com.digitalbanking.repository.AccountRepository;
-import com.digitalbanking.service.audit.AuditService;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,6 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
     private final CardMapper cardMapper;
-    private final AuditService auditService;
 
     @Transactional
     public CardResponse issueCard(CardRequest request) {
@@ -48,8 +46,6 @@ public class CardService {
                 .build();
 
         card = cardRepository.save(card);
-        auditService.logAction("CARD_ISSUED", "Card", card.getId(),
-                "Card issued for account: " + request.getAccountNumber());
         log.info("Card issued: {} for account: {}", card.getCardNumber(), request.getAccountNumber());
         return cardMapper.cardToResponse(card);
     }
@@ -61,7 +57,6 @@ public class CardService {
         card.setStatus(Card.CardStatus.BLOCKED);
         card.setBlockedDate(LocalDate.now());
         card = cardRepository.save(card);
-        auditService.logAction("CARD_BLOCKED", "Card", card.getId(), "Card blocked");
         return cardMapper.cardToResponse(card);
     }
 

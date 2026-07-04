@@ -14,10 +14,6 @@ export class CardService {
     return this.http.get<ApiResponse<Card[]>>(this.apiUrl);
   }
 
-  issueCard(request: any): Observable<ApiResponse<Card>> {
-    return this.http.post<ApiResponse<Card>>(`${this.apiUrl}/issue`, request);
-  }
-
   blockCard(cardId: number): Observable<ApiResponse<Card>> {
     return this.http.post<ApiResponse<Card>>(`${this.apiUrl}/${cardId}/block`, {});
   }

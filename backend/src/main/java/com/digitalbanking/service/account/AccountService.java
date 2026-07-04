@@ -10,6 +10,7 @@ import com.digitalbanking.mapper.AccountMapper;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.BranchRepository;
 import com.digitalbanking.repository.CustomerRepository;
+import com.digitalbanking.repository.UserRepository;
 import com.digitalbanking.security.SecurityUtils;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final BranchRepository branchRepository;
+    private final UserRepository userRepository;
     private final AccountMapper accountMapper;
     private final SecurityUtils securityUtils;
 
@@ -35,7 +37,7 @@ public class AccountService {
     public AccountResponse createAccount(CreateAccountRequest request) {
         Long userId = securityUtils.getCurrentUserId();
         Customer customer = customerRepository.findByUser(
-                userRepository().findById(userId).orElseThrow())
+                userRepository.findById(userId).orElseThrow())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         Branch branch = null;
@@ -70,7 +72,7 @@ public class AccountService {
     public List<AccountResponse> getMyAccounts() {
         Long userId = securityUtils.getCurrentUserId();
         Customer customer = customerRepository.findByUser(
-                userRepository().findById(userId).orElseThrow())
+                userRepository.findById(userId).orElseThrow())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         return accountRepository.findByCustomer(customer).stream()
@@ -102,12 +104,4 @@ public class AccountService {
         log.info("Account unfrozen: {}", accountNumber);
     }
 
-    public Account getAccountEntity(String accountNumber) {
-        return accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found: " + accountNumber));
-    }
-
-    private com.digitalbanking.repository.UserRepository userRepository() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 }

@@ -63,8 +63,7 @@ public class DataSeeder {
                     .password(passwordEncoder.encode("admin123"))
                     .firstName("System").lastName("Administrator")
                     .phone("9999999999").role(User.UserRole.ROLE_SUPER_ADMIN)
-                    .enabled(true).emailVerified(true)
-                    .accountLocked(false).mfaEnabled(false).build());
+                    .enabled(true).build());
 
             // Employee User
             User empUser = userRepository.save(User.builder()
@@ -72,8 +71,7 @@ public class DataSeeder {
                     .password(passwordEncoder.encode("employee123"))
                     .firstName("Test").lastName("Employee")
                     .phone("8888888888").role(User.UserRole.ROLE_EMPLOYEE)
-                    .enabled(true).emailVerified(true)
-                    .accountLocked(false).mfaEnabled(false).build());
+                    .enabled(true).build());
 
             // Customer User
             User custUser = userRepository.save(User.builder()
@@ -81,8 +79,7 @@ public class DataSeeder {
                     .password(passwordEncoder.encode("customer123"))
                     .firstName("Rajesh").lastName("Kumar")
                     .phone("7777777777").role(User.UserRole.ROLE_CUSTOMER)
-                    .enabled(true).emailVerified(true)
-                    .accountLocked(false).mfaEnabled(false).build());
+                    .enabled(true).build());
 
             // Second Customer
             User custUser2 = userRepository.save(User.builder()
@@ -90,8 +87,7 @@ public class DataSeeder {
                     .password(passwordEncoder.encode("customer123"))
                     .firstName("Priya").lastName("Sharma")
                     .phone("6666666666").role(User.UserRole.ROLE_CUSTOMER)
-                    .enabled(true).emailVerified(true)
-                    .accountLocked(false).mfaEnabled(false).build());
+                    .enabled(true).build());
 
             // Customer Profiles
             Customer customer1 = customerRepository.save(Customer.builder()

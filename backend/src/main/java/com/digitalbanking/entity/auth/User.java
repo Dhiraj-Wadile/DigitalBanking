@@ -3,7 +3,6 @@ package com.digitalbanking.entity.auth;
 import com.digitalbanking.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users", indexes = {
@@ -37,39 +36,6 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean enabled = false;
-
-    @Column(nullable = false)
-    private Boolean accountLocked = false;
-
-    private Integer failedLoginAttempts = 0;
-
-    private LocalDateTime lockedUntil;
-
-    private LocalDateTime lastLoginAt;
-
-    @Column(length = 500)
-    private String profileImageUrl;
-
-    @Column(nullable = false)
-    private Boolean mfaEnabled = false;
-
-    @Column(length = 100)
-    private String mfaSecret;
-
-    @Column(length = 500)
-    private String resetToken;
-
-    private LocalDateTime resetTokenExpiry;
-
-    @Column(length = 500)
-    private String emailVerificationToken;
-
-    private Boolean emailVerified = false;
-
-    @Column(length = 10)
-    private String otpCode;
-
-    private LocalDateTime otpExpiry;
 
     public enum UserRole {
         ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN, ROLE_SUPER_ADMIN

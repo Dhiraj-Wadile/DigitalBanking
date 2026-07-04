@@ -1,22 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { LoanService } from '../../core/services/loan.service';
 import { Loan } from '../../core/models/common.model';
 
 @Component({
   selector: 'app-loans',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   template: `
-    <div class="min-h-screen bg-gray-50">
-      <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center">
-          <a routerLink="/dashboard" class="text-blue-600 hover:underline font-medium">&larr; Back to Dashboard</a>
-        </div>
-      </nav>
-      <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Loans</h1>
         <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-6">{{ error }}</div>
         <div class="glass-card p-6 mb-8">
@@ -59,7 +52,6 @@ import { Loan } from '../../core/models/common.model';
           <p *ngIf="loans.length === 0 && !error" class="text-gray-400 text-center py-4">No loans</p>
         </div>
       </div>
-    </div>
   `
 })
 export class LoansComponent implements OnInit {

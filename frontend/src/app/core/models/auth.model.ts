@@ -9,15 +9,6 @@ export interface User {
   fullName: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  error: string | null;
-}
-
 export interface LoginRequest {
   username: string;
   password: string;

@@ -3,9 +3,11 @@ package com.digitalbanking.service.dashboard;
 import com.digitalbanking.dto.dashboard.DashboardResponse;
 import com.digitalbanking.entity.account.Account;
 import com.digitalbanking.entity.customer.Customer;
+import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.CustomerRepository;
 import com.digitalbanking.repository.TransactionRepository;
+import com.digitalbanking.repository.UserRepository;
 import com.digitalbanking.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +24,14 @@ public class DashboardService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
     private final SecurityUtils securityUtils;
 
     public DashboardResponse getDashboard() {
         Long userId = securityUtils.getCurrentUserId();
         Customer customer = customerRepository.findByUser(
-                userRepository().findById(userId).orElseThrow())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                userRepository.findById(userId).orElseThrow())
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         List<Account> accounts = accountRepository.findByCustomer(customer);
 
@@ -55,9 +58,5 @@ public class DashboardService {
         response.setPendingPayments(new ArrayList<>());
 
         return response;
-    }
-
-    private com.digitalbanking.repository.UserRepository userRepository() {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

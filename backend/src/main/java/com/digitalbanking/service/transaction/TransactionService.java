@@ -9,7 +9,6 @@ import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.TransactionMapper;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.TransactionRepository;
-import com.digitalbanking.service.audit.AuditService;
 import com.digitalbanking.security.SecurityUtils;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
-    private final AuditService auditService;
     private final SecurityUtils securityUtils;
 
     @Transactional
@@ -96,9 +94,6 @@ public class TransactionService {
                 .build();
 
         transactionRepository.save(creditTxn);
-
-        auditService.logAction("TRANSFER", "Transaction", debitTxn.getId(),
-                String.format("Transfer of %s from %s to %s", request.getAmount(), request.getFromAccountNumber(), request.getToAccountNumber()));
 
         log.info("Transfer completed: {} from {} to {}", request.getAmount(), request.getFromAccountNumber(), request.getToAccountNumber());
         return transactionMapper.transactionToResponse(debitTxn);

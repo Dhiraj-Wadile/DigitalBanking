@@ -103,44 +103,6 @@ export interface Loan {
   accountNumber: string;
 }
 
-export interface DashboardData {
-  totalBalance: number;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  totalAccounts: number;
-  totalTransactions: number;
-  accounts: AccountSummary[];
-  recentTransactions: RecentTransaction[];
-  pendingPayments: PaymentSummary[];
-}
-
-export interface AccountSummary {
-  id: number;
-  accountNumber: string;
-  accountType: string;
-  balance: number;
-  status: string;
-}
-
-export interface RecentTransaction {
-  id: number;
-  referenceNumber: string;
-  type: string;
-  amount: number;
-  status: string;
-  description: string;
-  date: string;
-}
-
-export interface PaymentSummary {
-  id: number;
-  paymentReference: string;
-  type: string;
-  amount: number;
-  status: string;
-  date: string;
-}
-
 export interface ApiResponse<T> {
   success: boolean;
   message: string;

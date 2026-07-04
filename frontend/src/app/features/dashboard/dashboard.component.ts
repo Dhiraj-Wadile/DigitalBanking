@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -9,23 +9,8 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="min-h-screen bg-gray-50">
-      <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-          <span class="text-xl font-bold text-blue-600">Digital Banking</span>
-          <div class="flex items-center gap-4">
-            <a routerLink="/notifications" class="text-gray-500 hover:text-gray-700">&#128276;</a>
-            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span class="text-white text-sm font-semibold">{{ userInitial }}</span>
-            </div>
-            <a routerLink="/profile" class="text-sm font-medium text-gray-700">{{ userName }}</a>
-            <button (click)="logout()" class="text-gray-500 hover:text-red-600">&#8592;</button>
-          </div>
-        </div>
-      </nav>
-
-      <div class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold text-gray-800 mb-1">Welcome, {{ userName }}!</h1>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h1 class="text-2xl font-bold text-gray-800 mb-1">Welcome, {{ userName }}!</h1>
         <p class="text-gray-500 mb-6">Financial overview</p>
 
         <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg mb-6">{{ error }}</div>
@@ -101,33 +86,24 @@ import { AuthService } from '../../core/services/auth.service';
           </div>
         </div>
       </div>
-    </div>
   `
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
   private authService = inject(AuthService);
-  private router = inject(Router);
 
   dashboardData: any = null;
   userName = '';
-  userInitial = '';
   error = '';
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.fullName || user.username;
-      this.userInitial = (user.fullName || user.username).charAt(0).toUpperCase();
     }
     this.dashboardService.getDashboard().subscribe({
       next: (res) => this.dashboardData = res.data,
       error: () => this.error = 'Could not load dashboard data.'
     });
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

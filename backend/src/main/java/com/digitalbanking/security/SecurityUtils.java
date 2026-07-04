@@ -33,9 +33,4 @@ public class SecurityUtils {
         return getCurrentUser().map(User::getUsername).orElse(null);
     }
 
-    public boolean hasRole(String role) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(role));
-    }
 }

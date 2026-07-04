@@ -1,22 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { PaymentService } from '../../core/services/payment.service';
 import { Beneficiary } from '../../core/models/common.model';
 
 @Component({
   selector: 'app-beneficiaries',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   template: `
-    <div class="min-h-screen bg-gray-50">
-      <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center">
-          <a routerLink="/dashboard" class="text-blue-600 hover:underline font-medium">&larr; Back to Dashboard</a>
-        </div>
-      </nav>
-      <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-bold text-gray-800">Beneficiaries</h1>
           <button (click)="showAddForm = true" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">+ Add</button>
@@ -49,7 +42,6 @@ import { Beneficiary } from '../../core/models/common.model';
         </div>
         <div *ngIf="beneficiaries.length === 0 && !error" class="text-center py-12 text-gray-500">No beneficiaries yet</div>
       </div>
-    </div>
   `
 })
 export class BeneficiariesComponent implements OnInit {

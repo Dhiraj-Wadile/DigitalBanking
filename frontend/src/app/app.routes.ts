@@ -20,49 +20,47 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
   },
   {
-    path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'accounts',
-    loadComponent: () => import('./features/accounts/accounts.component').then(m => m.AccountsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'transactions',
-    loadComponent: () => import('./features/transactions/transactions.component').then(m => m.TransactionsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'payments',
-    loadComponent: () => import('./features/payments/payments.component').then(m => m.PaymentsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'beneficiaries',
-    loadComponent: () => import('./features/beneficiaries/beneficiaries.component').then(m => m.BeneficiariesComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'cards',
-    loadComponent: () => import('./features/cards/cards.component').then(m => m.CardsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'loans',
-    loadComponent: () => import('./features/loans/loans.component').then(m => m.LoansComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'notifications',
-    loadComponent: () => import('./features/notifications/notifications.component').then(m => m.NotificationsComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
-    canActivate: [authGuard]
+    path: '',
+    loadComponent: () => import('./shared/layout/layout.component').then(m => m.LayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      },
+      {
+        path: 'accounts',
+        loadComponent: () => import('./features/accounts/accounts.component').then(m => m.AccountsComponent)
+      },
+      {
+        path: 'transactions',
+        loadComponent: () => import('./features/transactions/transactions.component').then(m => m.TransactionsComponent)
+      },
+      {
+        path: 'payments',
+        loadComponent: () => import('./features/payments/payments.component').then(m => m.PaymentsComponent)
+      },
+      {
+        path: 'beneficiaries',
+        loadComponent: () => import('./features/beneficiaries/beneficiaries.component').then(m => m.BeneficiariesComponent)
+      },
+      {
+        path: 'cards',
+        loadComponent: () => import('./features/cards/cards.component').then(m => m.CardsComponent)
+      },
+      {
+        path: 'loans',
+        loadComponent: () => import('./features/loans/loans.component').then(m => m.LoansComponent)
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./features/notifications/notifications.component').then(m => m.NotificationsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+      },
+    ]
   },
   {
     path: '**',

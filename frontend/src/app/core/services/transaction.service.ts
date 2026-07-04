@@ -37,7 +37,4 @@ export class TransactionService {
     return this.http.get<ApiResponse<PagedResponse<Transaction>>>(`${this.apiUrl}/account/${accountNumber}`, { params });
   }
 
-  getTransactionByReference(referenceNumber: string): Observable<ApiResponse<Transaction>> {
-    return this.http.get<ApiResponse<Transaction>>(`${this.apiUrl}/${referenceNumber}`);
-  }
 }

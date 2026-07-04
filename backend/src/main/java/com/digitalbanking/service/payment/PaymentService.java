@@ -9,7 +9,6 @@ import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.PaymentMapper;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.PaymentRepository;
-import com.digitalbanking.service.audit.AuditService;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,6 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final AccountRepository accountRepository;
     private final PaymentMapper paymentMapper;
-    private final AuditService auditService;
 
     @Transactional
     public PaymentResponse processPayment(PaymentRequest request) {
@@ -73,9 +71,6 @@ public class PaymentService {
                 .build();
 
         payment = paymentRepository.save(payment);
-
-        auditService.logAction("PAYMENT", "Payment", payment.getId(),
-                String.format("Payment of %s via %s", request.getAmount(), request.getPaymentMethod()));
 
         log.info("Payment processed: {} via {}", paymentReference, request.getPaymentMethod());
         return paymentMapper.paymentToResponse(payment);

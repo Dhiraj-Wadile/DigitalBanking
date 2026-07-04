@@ -1,8 +1,6 @@
 version: '3.8'
 
 services:
-  # ==================== Infrastructure ====================
-
   postgres:
     image: postgres:16-alpine
     container_name: banking_postgres
@@ -20,196 +18,31 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: banking_redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: banking_rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # ==================== Microservices ====================
-
-  auth-service:
+  backend:
     build:
-      context: ./microservices/auth-service
+      context: ./backend
       dockerfile: Dockerfile
-    container_name: auth-service
-    ports:
-      - "8081:8081"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital_banking
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_RABBITMQ_HOST: rabbitmq
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - banking-network
-
-  account-service:
-    build:
-      context: ./microservices/account-service
-      dockerfile: Dockerfile
-    container_name: account-service
-    ports:
-      - "8082:8082"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital_banking
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_RABBITMQ_HOST: rabbitmq
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - banking-network
-
-  transaction-service:
-    build:
-      context: ./microservices/transaction-service
-      dockerfile: Dockerfile
-    container_name: transaction-service
-    ports:
-      - "8083:8083"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital_banking
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_RABBITMQ_HOST: rabbitmq
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - banking-network
-
-  payment-service:
-    build:
-      context: ./microservices/payment-service
-      dockerfile: Dockerfile
-    container_name: payment-service
-    ports:
-      - "8084:8084"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital_banking
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_RABBITMQ_HOST: rabbitmq
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - banking-network
-
-  notification-service:
-    build:
-      context: ./microservices/notification-service
-      dockerfile: Dockerfile
-    container_name: notification-service
-    ports:
-      - "8085:8085"
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - banking-network
-
-  # ==================== API Gateway ====================
-
-  gateway:
-    build:
-      context: ./microservices/gateway
-      dockerfile: Dockerfile
-    container_name: banking-gateway
+    container_name: banking_backend
     ports:
       - "8080:8080"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/digital_banking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
-      - auth-service
-      - account-service
-      - transaction-service
-      - payment-service
-    networks:
-      - banking-network
+      postgres:
+        condition: service_healthy
 
-  eureka:
-    image: springcloud/eureka:latest
-    container_name: banking-eureka
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: banking_frontend
     ports:
-      - "8761:8761"
-    networks:
-      - banking-network
-
-  # ==================== Monitoring ====================
-
-  prometheus:
-    image: prom/prometheus
-    container_name: banking_prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - "4200:80"
     depends_on:
-      - auth-service
-      - account-service
-      - transaction-service
-      - payment-service
-    networks:
-      - banking-network
-
-  grafana:
-    image: grafana/grafana
-    container_name: banking_grafana
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    volumes:
-      - grafana_data:/var/lib/grafana
-    networks:
-      - banking-network
+      - backend
 
 volumes:
   postgres_data:
-  redis_data:
-  grafana_data:
-
-networks:
-  banking-network:
-    driver: bridge

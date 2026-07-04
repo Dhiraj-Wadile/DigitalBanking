@@ -8,7 +8,6 @@ import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.LoanMapper;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.LoanRepository;
-import com.digitalbanking.service.audit.AuditService;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,6 @@ public class LoanService {
     private final LoanRepository loanRepository;
     private final AccountRepository accountRepository;
     private final LoanMapper loanMapper;
-    private final AuditService auditService;
 
     @Transactional
     public LoanResponse applyForLoan(LoanApplicationRequest request) {
@@ -55,8 +53,6 @@ public class LoanService {
                 .build();
 
         loan = loanRepository.save(loan);
-        auditService.logAction("LOAN_APPLICATION", "Loan", loan.getId(),
-                "Loan application for " + request.getRequestedAmount());
         log.info("Loan application submitted: {}", loan.getLoanAccountNumber());
         return loanMapper.loanToResponse(loan);
     }
