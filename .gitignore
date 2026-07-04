@@ -1,0 +1,40 @@
+# ==================== Dependencies ====================
+node_modules/
+frontend/node_modules/
+
+# ==================== Build Output ====================
+frontend/dist/
+frontend/.angular/
+backend/target/
+microservices/**/target/
+
+# ==================== Logs ====================
+*.log
+backend/logs/
+logs/
+
+# ==================== Environment & Secrets ====================
+.env
+.env.local
+.env.*.local
+**/application-local.yml
+
+# ==================== IDE ====================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# ==================== OS ====================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==================== Docker Volumes ====================
+docker-compose.override.yml
+
+# ==================== Misc ====================
+*.swp
+*.swo
+*~
