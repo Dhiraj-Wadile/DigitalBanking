@@ -18,7 +18,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Page<Payment> findByAccountOrderByPaymentDateDesc(Account account, Pageable pageable);
 
-    List<Payment> findByStatus(String status);
+    List<Payment> findByStatus(com.digitalbanking.entity.payment.Payment.PaymentStatus status);
 
     @Query("SELECT p FROM Payment p WHERE p.account.customer.id = :customerId ORDER BY p.paymentDate DESC")
     Page<Payment> findByCustomerId(@Param("customerId") Long customerId, Pageable pageable);

@@ -30,7 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-gray-500">Total Balance</p>
-              <p class="text-2xl font-bold text-gray-900 mt-1">{{ dashboardData?.totalBalance | number:'1.2-2' }}</p>
+              <p class="text-2xl font-bold text-gray-900 mt-1">{{ (dashboardData?.totalBalance || 0) | number:'1.2-2' }}</p>
             </div>
             <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
               <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,8 +57,8 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-violet-600 rounded-t-2xl"></div>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-gray-500">This Month</p>
-              <p class="text-2xl font-bold text-gray-900 mt-1">{{ dashboardData?.totalDeposits | number:'1.2-2' }}</p>
+              <p class="text-sm font-medium text-gray-500">Transactions</p>
+              <p class="text-2xl font-bold text-gray-900 mt-1">{{ dashboardData?.totalTransactions || 0 }}</p>
             </div>
             <div class="w-12 h-12 bg-violet-50 rounded-xl flex items-center justify-center">
               <svg class="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ import { AuthService } from '../../core/services/auth.service';
                   <p class="text-sm text-gray-500 mt-0.5">{{ a.accountType }}</p>
                 </div>
                 <div class="text-right">
-                  <p class="font-bold text-gray-900">{{ a.balance | number:'1.2-2' }}</p>
+                  <p class="font-bold text-gray-900">{{ (a.balance || 0) | number:'1.2-2' }}</p>
                   <span [class]="a.status === 'ACTIVE' ? 'badge-green' : 'badge-red'">{{ a.status }}</span>
                 </div>
               </div>
