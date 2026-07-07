@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
+import { Observable, tap, map, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.model';
+import { ApiResponse } from '../models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,42 +19,44 @@ export class AuthService {
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, request).pipe(
+      map(response => response.data),
+      tap(data => {
+        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         localStorage.setItem('user', JSON.stringify({
-          id: response.userId,
-          username: response.username,
-          role: response.role,
-          fullName: response.fullName
+          id: data.userId,
+          username: data.username,
+          role: data.role,
+          fullName: data.fullName
         }));
         this.currentUserSubject.next({
-          id: response.userId,
-          username: response.username,
-          role: response.role,
-          fullName: response.fullName
+          id: data.userId,
+          username: data.username,
+          role: data.role,
+          fullName: data.fullName
         });
       })
     );
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/register`, request).pipe(
+      map(response => response.data),
+      tap(data => {
+        localStorage.setItem('token', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         localStorage.setItem('user', JSON.stringify({
-          id: response.userId,
-          username: response.username,
-          role: response.role,
-          fullName: response.fullName
+          id: data.userId,
+          username: data.username,
+          role: data.role,
+          fullName: data.fullName
         }));
         this.currentUserSubject.next({
-          id: response.userId,
-          username: response.username,
-          role: response.role,
-          fullName: response.fullName
+          id: data.userId,
+          username: data.username,
+          role: data.role,
+          fullName: data.fullName
         });
       })
     );
