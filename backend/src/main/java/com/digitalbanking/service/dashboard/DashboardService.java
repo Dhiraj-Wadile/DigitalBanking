@@ -2,6 +2,7 @@ package com.digitalbanking.service.dashboard;
 
 import com.digitalbanking.dto.dashboard.DashboardResponse;
 import com.digitalbanking.entity.account.Account;
+import com.digitalbanking.entity.auth.User;
 import com.digitalbanking.entity.customer.Customer;
 import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.repository.AccountRepository;
@@ -29,11 +30,17 @@ public class DashboardService {
 
     public DashboardResponse getDashboard() {
         Long userId = securityUtils.getCurrentUserId();
-        Customer customer = customerRepository.findByUser(
-                userRepository.findById(userId).orElseThrow())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        List<Account> accounts = accountRepository.findByCustomer(customer);
+        List<Account> accounts;
+        if (user.getRole() == User.UserRole.ROLE_CUSTOMER) {
+            Customer customer = customerRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            accounts = accountRepository.findByCustomer(customer);
+        } else {
+            accounts = accountRepository.findAll();
+        }
 
         BigDecimal totalBalance = accounts.stream()
                 .map(Account::getBalance)

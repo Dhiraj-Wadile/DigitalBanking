@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "accounts", indexes = {
-    @Index(name = "idx_account_number", columnList = "accountNumber", unique = true),
+    @Index(name = "idx_account_number", columnList = "account_number", unique = true),
     @Index(name = "idx_account_customer", columnList = "customer_id"),
     @Index(name = "idx_account_branch", columnList = "branch_id")
 })

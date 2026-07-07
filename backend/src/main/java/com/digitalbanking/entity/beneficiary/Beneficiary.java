@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "beneficiaries", indexes = {
     @Index(name = "idx_beneficiary_customer", columnList = "customer_id"),
-    @Index(name = "idx_beneficiary_account", columnList = "accountNumber")
+    @Index(name = "idx_beneficiary_account", columnList = "account_number")
 })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Beneficiary extends BaseEntity {

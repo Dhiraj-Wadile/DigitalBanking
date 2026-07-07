@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "branches", indexes = {
-    @Index(name = "idx_branch_code", columnList = "branchCode", unique = true)
+    @Index(name = "idx_branch_code", columnList = "branch_code", unique = true)
 })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Branch extends BaseEntity {

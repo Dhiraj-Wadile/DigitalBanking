@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PaymentService } from '../../core/services/payment.service';
+import { BeneficiaryService } from '../../core/services/beneficiary.service';
 import { Beneficiary } from '../../core/models/common.model';
 
 @Component({
@@ -9,54 +9,100 @@ import { Beneficiary } from '../../core/models/common.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-          <h1 class="text-2xl font-bold text-gray-800">Beneficiaries</h1>
-          <button (click)="showAddForm = true" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">+ Add</button>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="page-title">Beneficiaries</h1>
+          <p class="page-subtitle">Manage your saved recipients</p>
         </div>
-        <div *ngIf="error" class="bg-red-50 text-red-600 p-4 rounded-lg mb-6">{{ error }}</div>
-        <div *ngIf="showAddForm" class="glass-card p-6 mb-8">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">Add Beneficiary</h2>
-          <form (ngSubmit)="onAdd()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" [(ngModel)]="newB.name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300" placeholder="Name" required>
-            <input type="text" [(ngModel)]="newB.accountNumber" name="accountNumber" class="w-full px-4 py-3 rounded-lg border border-gray-300" placeholder="Account Number" required>
-            <input type="text" [(ngModel)]="newB.ifscCode" name="ifscCode" class="w-full px-4 py-3 rounded-lg border border-gray-300" placeholder="IFSC Code" required>
-            <input type="text" [(ngModel)]="newB.bankName" name="bankName" class="w-full px-4 py-3 rounded-lg border border-gray-300" placeholder="Bank Name">
-            <div class="md:col-span-2 flex gap-4">
-              <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Save</button>
-              <button type="button" (click)="showAddForm = false" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Cancel</button>
+        <button (click)="showAddForm = true" class="btn-primary flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Add Beneficiary
+        </button>
+      </div>
+
+      <div *ngIf="error" class="flex items-center gap-2 bg-red-50 text-red-600 p-4 rounded-xl mb-6">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ error }}
+      </div>
+
+      <!-- Add Form -->
+      <div *ngIf="showAddForm" class="card p-6 mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 mb-5">Add New Beneficiary</h2>
+        <form (ngSubmit)="onAdd()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="label">Name</label>
+            <input type="text" [(ngModel)]="newB.name" name="name" class="input-field" placeholder="Beneficiary name" required>
+          </div>
+          <div>
+            <label class="label">Account Number</label>
+            <input type="text" [(ngModel)]="newB.accountNumber" name="accountNumber" class="input-field" placeholder="Account number" required>
+          </div>
+          <div>
+            <label class="label">IFSC Code</label>
+            <input type="text" [(ngModel)]="newB.ifscCode" name="ifscCode" class="input-field" placeholder="IFSC code" required>
+          </div>
+          <div>
+            <label class="label">Bank Name</label>
+            <input type="text" [(ngModel)]="newB.bankName" name="bankName" class="input-field" placeholder="Bank name">
+          </div>
+          <div class="md:col-span-2 flex gap-3">
+            <button type="submit" class="btn-primary">Save Beneficiary</button>
+            <button type="button" (click)="showAddForm = false" class="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Beneficiaries Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let b of beneficiaries" class="card p-6 group">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">
+              {{ b.name.charAt(0) }}
             </div>
-          </form>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div *ngFor="let b of beneficiaries" class="glass-card p-6">
-            <h3 class="font-semibold text-gray-800">{{ b.name }}</h3>
-            <p class="text-sm text-gray-500">{{ b.accountNumber }}</p>
-            <p class="text-sm text-gray-500">IFSC: {{ b.ifscCode }}</p>
-            <p class="text-sm text-gray-500">Bank: {{ b.bankName }}</p>
-            <div class="mt-4 pt-3 border-t flex justify-between items-center">
-              <button (click)="onDelete(b.id)" class="text-red-600 hover:text-red-800 text-sm">Delete</button>
-              <span class="text-xs px-2 py-1 rounded-full" [class]="b.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">{{ b.verified ? 'Verified' : 'Pending' }}</span>
+            <span [class]="b.verified ? 'badge-green' : 'badge-yellow'">{{ b.verified ? 'Verified' : 'Pending' }}</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">{{ b.name }}</h3>
+          <p class="text-sm text-gray-500 font-mono">{{ b.accountNumber }}</p>
+          <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
+            <div>
+              <p class="text-xs text-gray-400">IFSC</p>
+              <p class="text-sm font-medium text-gray-700 font-mono">{{ b.ifscCode }}</p>
             </div>
+            <button (click)="onDelete(b.id)" class="btn-danger text-sm">Delete</button>
           </div>
         </div>
-        <div *ngIf="beneficiaries.length === 0 && !error" class="text-center py-12 text-gray-500">No beneficiaries yet</div>
       </div>
+
+      <div *ngIf="beneficiaries.length === 0 && !error" class="text-center py-16">
+        <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <p class="text-gray-500 font-medium">No beneficiaries yet</p>
+        <p class="text-sm text-gray-400 mt-1">Add a beneficiary to start sending money</p>
+      </div>
+    </div>
   `
 })
 export class BeneficiariesComponent implements OnInit {
-  private paymentService = inject(PaymentService);
+  private beneficiaryService = inject(BeneficiaryService);
   beneficiaries: Beneficiary[] = [];
   showAddForm = false;
   error = '';
   newB = { name: '', accountNumber: '', ifscCode: '', bankName: '' };
 
   ngOnInit() {
-    this.paymentService.getBeneficiaries().subscribe({ next: (r) => this.beneficiaries = r.data || [], error: () => {} });
+    this.beneficiaryService.getBeneficiaries().subscribe({ next: (r) => this.beneficiaries = r.data || [], error: () => {} });
   }
 
   onAdd() {
-    this.paymentService.addBeneficiary(this.newB).subscribe({
+    this.beneficiaryService.addBeneficiary(this.newB).subscribe({
       next: () => { this.showAddForm = false; this.newB = { name: '', accountNumber: '', ifscCode: '', bankName: '' }; this.ngOnInit(); },
       error: (err) => this.error = err.error?.message || 'Failed.'
     });
@@ -64,7 +110,7 @@ export class BeneficiariesComponent implements OnInit {
 
   onDelete(id: number) {
     if (confirm('Delete this beneficiary?')) {
-      this.paymentService.deleteBeneficiary(id).subscribe({ next: () => this.ngOnInit() });
+      this.beneficiaryService.deleteBeneficiary(id).subscribe({ next: () => this.ngOnInit() });
     }
   }
 }

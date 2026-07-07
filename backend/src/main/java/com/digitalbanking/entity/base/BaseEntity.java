@@ -5,15 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @MappedSuperclass
-@SQLDelete(sql = "UPDATE {table} SET deleted = true, deleted_at = NOW() WHERE id = ?")
-@Where(clause = "deleted = false")
 public abstract class BaseEntity {
 
     @Id

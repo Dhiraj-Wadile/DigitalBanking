@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Payment, Beneficiary, PagedResponse, ApiResponse } from '../models/common.model';
+import { Payment, PagedResponse, ApiResponse } from '../models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -18,17 +18,5 @@ export class PaymentService {
     return this.http.get<ApiResponse<PagedResponse<Payment>>>(`${this.apiUrl}/payments`, {
       params: { page: page.toString(), size: size.toString() }
     });
-  }
-
-  getBeneficiaries(): Observable<ApiResponse<Beneficiary[]>> {
-    return this.http.get<ApiResponse<Beneficiary[]>>(`${this.apiUrl}/beneficiaries`);
-  }
-
-  addBeneficiary(request: any): Observable<ApiResponse<Beneficiary>> {
-    return this.http.post<ApiResponse<Beneficiary>>(`${this.apiUrl}/beneficiaries`, request);
-  }
-
-  deleteBeneficiary(id: number): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/beneficiaries/${id}`);
   }
 }

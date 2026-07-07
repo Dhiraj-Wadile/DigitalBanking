@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions", indexes = {
-    @Index(name = "idx_txn_reference", columnList = "referenceNumber", unique = true),
+    @Index(name = "idx_txn_reference", columnList = "reference_number", unique = true),
     @Index(name = "idx_txn_account", columnList = "account_id"),
-    @Index(name = "idx_txn_date", columnList = "transactionDate"),
-    @Index(name = "idx_txn_type", columnList = "transactionType")
+    @Index(name = "idx_txn_date", columnList = "transaction_date"),
+    @Index(name = "idx_txn_type", columnList = "transaction_type")
 })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Transaction extends BaseEntity {

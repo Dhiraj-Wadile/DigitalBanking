@@ -21,6 +21,17 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
+    @GetMapping
+    @Operation(summary = "Get my transactions")
+    public ResponseEntity<ApiResponse<PagedResponse<TransactionResponse>>> getMyTransactions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<TransactionResponse> transactions = transactionService.getMyTransactions(page, size);
+        PagedResponse<TransactionResponse> pagedResponse = PagedResponse.of(
+                transactions.getContent(), page, size, transactions.getTotalElements());
+        return ResponseEntity.ok(ApiResponse.success(pagedResponse));
+    }
+
     @PostMapping("/transfer")
     @Operation(summary = "Transfer funds between accounts")
     public ResponseEntity<ApiResponse<TransactionResponse>> transfer(@Valid @RequestBody TransferRequest request) {

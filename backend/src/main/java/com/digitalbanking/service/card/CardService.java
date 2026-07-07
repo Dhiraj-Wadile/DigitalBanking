@@ -3,11 +3,15 @@ package com.digitalbanking.service.card;
 import com.digitalbanking.dto.card.*;
 import com.digitalbanking.entity.card.Card;
 import com.digitalbanking.entity.account.Account;
+import com.digitalbanking.repository.UserRepository;
 import com.digitalbanking.exception.BadRequestException;
 import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.CardMapper;
+import com.digitalbanking.entity.customer.Customer;
 import com.digitalbanking.repository.CardRepository;
 import com.digitalbanking.repository.AccountRepository;
+import com.digitalbanking.repository.CustomerRepository;
+import com.digitalbanking.security.SecurityUtils;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,9 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
+    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
     private final CardMapper cardMapper;
 
     @Transactional
@@ -83,9 +90,20 @@ public class CardService {
     }
 
     public List<CardResponse> getMyCards() {
-        return cardRepository.findAll().stream()
-                .map(cardMapper::cardToResponse)
-                .toList();
+        Long userId = securityUtils.getCurrentUserId();
+        com.digitalbanking.entity.auth.User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getRole() == com.digitalbanking.entity.auth.User.UserRole.ROLE_CUSTOMER) {
+            Customer customer = customerRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return cardRepository.findByCustomerId(customer.getId()).stream()
+                    .map(cardMapper::cardToResponse)
+                    .toList();
+        } else {
+            return cardRepository.findAll().stream()
+                    .map(cardMapper::cardToResponse)
+                    .toList();
+        }
     }
 
     private String generateCardNumber() {

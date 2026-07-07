@@ -2,13 +2,17 @@ package com.digitalbanking.service.transaction;
 
 import com.digitalbanking.dto.transaction.*;
 import com.digitalbanking.entity.account.Account;
+import com.digitalbanking.entity.auth.User;
+import com.digitalbanking.entity.customer.Customer;
 import com.digitalbanking.entity.transaction.Transaction;
 import com.digitalbanking.exception.BadRequestException;
 import com.digitalbanking.exception.InsufficientBalanceException;
 import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.TransactionMapper;
 import com.digitalbanking.repository.AccountRepository;
+import com.digitalbanking.repository.CustomerRepository;
 import com.digitalbanking.repository.TransactionRepository;
+import com.digitalbanking.repository.UserRepository;
 import com.digitalbanking.security.SecurityUtils;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,8 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final TransactionMapper transactionMapper;
     private final SecurityUtils securityUtils;
 
@@ -171,5 +177,21 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findByReferenceNumber(referenceNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
         return transactionMapper.transactionToResponse(transaction);
+    }
+
+    public Page<TransactionResponse> getMyTransactions(int page, int size) {
+        Long userId = securityUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getRole() == User.UserRole.ROLE_CUSTOMER) {
+            Customer customer = customerRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return transactionRepository.findByCustomerId(customer.getId(), PageRequest.of(page, size))
+                    .map(transactionMapper::transactionToResponse);
+        } else {
+            return transactionRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "transactionDate")))
+                    .map(transactionMapper::transactionToResponse);
+        }
     }
 }

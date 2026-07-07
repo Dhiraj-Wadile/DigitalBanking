@@ -3,6 +3,7 @@ package com.digitalbanking.service.account;
 import com.digitalbanking.dto.account.*;
 import com.digitalbanking.entity.account.Account;
 import com.digitalbanking.entity.account.Branch;
+import com.digitalbanking.entity.auth.User;
 import com.digitalbanking.entity.customer.Customer;
 import com.digitalbanking.exception.BadRequestException;
 import com.digitalbanking.exception.ResourceNotFoundException;
@@ -71,13 +72,20 @@ public class AccountService {
 
     public List<AccountResponse> getMyAccounts() {
         Long userId = securityUtils.getCurrentUserId();
-        Customer customer = customerRepository.findByUser(
-                userRepository.findById(userId).orElseThrow())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return accountRepository.findByCustomer(customer).stream()
-                .map(accountMapper::accountToResponse)
-                .toList();
+        if (user.getRole() == User.UserRole.ROLE_CUSTOMER) {
+            Customer customer = customerRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return accountRepository.findByCustomer(customer).stream()
+                    .map(accountMapper::accountToResponse)
+                    .toList();
+        } else {
+            return accountRepository.findAll().stream()
+                    .map(accountMapper::accountToResponse)
+                    .toList();
+        }
     }
 
     public BigDecimal getBalance(String accountNumber) {

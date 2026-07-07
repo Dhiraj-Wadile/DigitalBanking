@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "cards", indexes = {
-    @Index(name = "idx_card_number", columnList = "cardNumber", unique = true),
+    @Index(name = "idx_card_number", columnList = "card_number", unique = true),
     @Index(name = "idx_card_account", columnList = "account_id")
 })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

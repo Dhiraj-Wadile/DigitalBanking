@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Account, Transaction, TransferRequest, PagedResponse, ApiResponse } from '../models/common.model';
+import { Account, ApiResponse } from '../models/common.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {

@@ -21,11 +21,27 @@ public class ReferenceGenerator {
 
     public static String generateCardNumber() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 15; i++) {
             sb.append(RANDOM.nextInt(10));
-            if ((i + 1) % 4 == 0 && i < 15) sb.append(" ");
         }
-        return sb.toString().trim();
+        int checkDigit = calculateLuhnCheckDigit(sb.toString());
+        sb.append(checkDigit);
+        return sb.toString();
+    }
+
+    private static int calculateLuhnCheckDigit(String number) {
+        int sum = 0;
+        boolean alternate = true;
+        for (int i = number.length() - 1; i >= 0; i--) {
+            int digit = Character.getNumericValue(number.charAt(i));
+            if (alternate) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+            alternate = !alternate;
+        }
+        return (10 - (sum % 10)) % 10;
     }
 
     public static String generateLoanAccountNumber() {

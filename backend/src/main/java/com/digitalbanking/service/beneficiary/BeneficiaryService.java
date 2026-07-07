@@ -6,6 +6,7 @@ import com.digitalbanking.entity.customer.Customer;
 import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.repository.BeneficiaryRepository;
 import com.digitalbanking.repository.CustomerRepository;
+import com.digitalbanking.repository.UserRepository;
 import com.digitalbanking.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class BeneficiaryService {
 
     private final BeneficiaryRepository beneficiaryRepository;
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final SecurityUtils securityUtils;
 
     @Transactional
@@ -70,8 +72,9 @@ public class BeneficiaryService {
 
     private Customer getCustomer() {
         Long userId = securityUtils.getCurrentUserId();
-        return customerRepository.findByUser(
-                new com.digitalbanking.entity.auth.User() {{ setId(userId); }})
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return customerRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
 

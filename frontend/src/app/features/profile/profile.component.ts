@@ -7,31 +7,44 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="max-w-3xl mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">Profile</h1>
-        <div class="glass-card p-8">
-          <div class="flex items-center gap-6 mb-8">
-            <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
-              <span class="text-white text-3xl font-bold">{{ userInitial }}</span>
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-gray-800">{{ user?.fullName }}</h2>
-              <p class="text-gray-500">{{ user?.email }}</p>
-              <p class="text-sm text-gray-400 mt-1">{{ user?.role }}</p>
-            </div>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="mb-8">
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle">Your account information</p>
+      </div>
+
+      <div class="card p-8">
+        <div class="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-gray-100">
+          <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+            {{ userInitial }}
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-              <input type="text" [value]="user?.username" disabled class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" [value]="user?.email" disabled class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50">
-            </div>
+          <div class="text-center sm:text-left">
+            <h2 class="text-xl font-bold text-gray-900">{{ user?.fullName }}</h2>
+            <p class="text-gray-500 mt-0.5">{{ user?.email }}</p>
+            <span class="badge-blue mt-2 inline-block">{{ user?.role }}</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="label">Username</label>
+            <div class="input-field bg-gray-50 cursor-not-allowed">{{ user?.username }}</div>
+          </div>
+          <div>
+            <label class="label">Email</label>
+            <div class="input-field bg-gray-50 cursor-not-allowed">{{ user?.email }}</div>
+          </div>
+          <div>
+            <label class="label">Phone</label>
+            <div class="input-field bg-gray-50 cursor-not-allowed">{{ user?.phone || 'Not provided' }}</div>
+          </div>
+          <div>
+            <label class="label">Role</label>
+            <div class="input-field bg-gray-50 cursor-not-allowed">{{ user?.role }}</div>
           </div>
         </div>
       </div>
+    </div>
   `
 })
 export class ProfileComponent implements OnInit {

@@ -9,6 +9,10 @@ import com.digitalbanking.exception.ResourceNotFoundException;
 import com.digitalbanking.mapper.PaymentMapper;
 import com.digitalbanking.repository.AccountRepository;
 import com.digitalbanking.repository.PaymentRepository;
+import com.digitalbanking.repository.UserRepository;
+import com.digitalbanking.entity.customer.Customer;
+import com.digitalbanking.repository.CustomerRepository;
+import com.digitalbanking.security.SecurityUtils;
 import com.digitalbanking.util.ReferenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,9 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final AccountRepository accountRepository;
+    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
     private final PaymentMapper paymentMapper;
 
     @Transactional
@@ -77,8 +84,18 @@ public class PaymentService {
     }
 
     public Page<PaymentResponse> getMyPayments(int page, int size) {
-        return paymentRepository.findAll(PageRequest.of(page, size))
-                .map(paymentMapper::paymentToResponse);
+        Long userId = securityUtils.getCurrentUserId();
+        com.digitalbanking.entity.auth.User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getRole() == com.digitalbanking.entity.auth.User.UserRole.ROLE_CUSTOMER) {
+            Customer customer = customerRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return paymentRepository.findByCustomerId(customer.getId(), PageRequest.of(page, size))
+                    .map(paymentMapper::paymentToResponse);
+        } else {
+            return paymentRepository.findAll(PageRequest.of(page, size))
+                    .map(paymentMapper::paymentToResponse);
+        }
     }
 
     public PaymentResponse getPaymentByReference(String reference) {
